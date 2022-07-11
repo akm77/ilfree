@@ -10,6 +10,7 @@ from aiogram.utils.markdown import text
 
 from tgbot.keyboards.inline import edit_server_keyboard, myservers_callback, Action, servers_list_keyboard, \
     server_action_keyboard, confirm_keyboard, server_keys_keyboard, CALLBACK_CACHE_TIME, key_action_keyboard
+from tgbot.misc.utils import size_human_read_format
 from tgbot.models.outline_server import server_create, OutlineServer, server_read, server_delete, \
     server_update, server_key_sync, server_key_create, server_key_read, server_key_update, server_key_delete
 from tgbot.services.outline_server_api import OutlineVPN
@@ -388,9 +389,9 @@ async def key_actions(call: CallbackQuery, callback_data: dict):
                                        key_id=int(callback_data['key_id']))
     markup = await key_action_keyboard(ip_address=callback_data['ip'], key_id=callback_data['key_id'])
     await call.answer(cache_time=CALLBACK_CACHE_TIME)
-
+    print(server_key.used_bytes)
     await call.message.edit_text(text(f"Key name: {server_key.name or 'Key id ' + str(server_key.key_id)}\n"
-                                      f"Used bytes: {server_key.used_bytes:,}\n"
+                                      f"Used bytes: {size_human_read_format(server_key.used_bytes)}\n"
                                       f"What do you want to do?"),
                                  reply_markup=markup,
                                  disable_web_page_preview=True
@@ -406,7 +407,7 @@ async def delete_key_confirm(call: CallbackQuery, callback_data: dict):
                                        server_ip=ipaddress.ip_address(callback_data['ip']),
                                        key_id=int(callback_data['key_id']))
     await call.message.edit_text(text(f"Key name: {server_key.name or 'Key id ' + str(server_key.key_id)}\n"
-                                      f"Used bytes: {server_key.used_bytes:,}\n\n"
+                                      f"Used bytes: {size_human_read_format(server_key.used_bytes)}\n\n"
                                       f"Are you sure to delete this key?"),
                                  reply_markup=markup,
                                  disable_web_page_preview=True

@@ -1,5 +1,6 @@
 import datetime
 import decimal
+import math
 from typing import Union, Tuple
 
 
@@ -93,3 +94,15 @@ def format_decimal(value: Union[int, float, decimal.Decimal], pre=8):
 def value_to_decimal(value, decimal_places: int = 8) -> decimal.Decimal:
     decimal.getcontext().rounding = decimal.ROUND_HALF_UP  # define rounding method
     return decimal.Decimal(str(float(value))).quantize(decimal.Decimal('1e-{}'.format(decimal_places)))
+
+
+def size_human_read_format(size: Union[int, float]):
+    suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+    if size > 1024 ** (len(suffixes) - 1):
+        raise ValueError("Size too big.")
+    if size < 0:
+        raise ValueError("Size can not be negative.")
+    if not int(size):
+        return "0 B"
+    pwr = math.floor(math.log(size, 1024))
+    return f"{size / 1024 ** pwr:.0f} {suffixes[pwr]}"

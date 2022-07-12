@@ -105,4 +105,4 @@ def size_human_read_format(size: Union[int, float]):
     if not int(size):
         return "0 B"
     pwr = math.floor(math.log(size, 1024))
-    return f"{size / 1024 ** pwr:.0f} {suffixes[pwr]}"
+    return f"{size / 1024 ** pwr:.2f} {suffixes[pwr]}"
